@@ -1,0 +1,40 @@
+# Superpowers brainstorming (local-only visual companion state)
+.superpowers/
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# Foundry
+out/
+cache/
+broadcast/
+lcov.info
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.vercel
+
+# Playwright MCP local session artifacts
+.playwright-mcp/
+
+# TS incremental build info (regenerated; should not be tracked)
+*.tsbuildinfo
+
+# Claude Code session state — never commit
+.claude/
+.env*.local

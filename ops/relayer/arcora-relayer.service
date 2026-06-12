@@ -1,0 +1,59 @@
+[Unit]
+Description=Arcora relayer (App Kit Swap orchestrator + gateway settle)
+After=network-online.target
+Wants=network-online.target
+# Cap restart storms so a crash loop doesn't fill the journal in minutes.
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+# AFG-021 (2026-06-06): dedicated unprivileged user, runs from /opt (not root
+# from /root). One-time VPS migration: useradd --system arcora-ops; cp -a the
+# daemon dirs to /opt/arcora-ops; chown -R arcora-ops:arcora-ops; chmod 600 the
+# .env files. Vault AppRole creds live in the .env (read over HTTP at boot), so
+# no extra filesystem reconciliation is needed.
+User=arcora-ops
+Group=arcora-ops
+WorkingDirectory=/opt/arcora-ops/relayer
+EnvironmentFile=/opt/arcora-ops/relayer/.env
+Environment=NODE_ENV=production
+Environment=HOME=/opt/arcora-ops/relayer
+ExecStart=/usr/bin/node --import tsx/esm run.ts
+Restart=always
+RestartSec=5
+# Audit Ops-L-11 (2026-05-31): give the cooperative drain room to land the
+# current iteration on SIGTERM before systemd escalates to SIGKILL. Each
+# receipt wait inside processOne is now capped at 30s (RECEIPT_TIMEOUT_MS),
+# so 45s covers a worst-case in-flight receipt plus teardown.
+TimeoutStopSec=45
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=arcora-relayer
+
+# AFG-021 sandboxing. MemoryDenyWriteExecute deliberately omitted (V8 JIT needs
+# W+X). tsx/esbuild needs a writable HOME + working dir (ReadWritePaths).
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/opt/arcora-ops/relayer
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectControlGroups=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+
+[Install]
+WantedBy=multi-user.target

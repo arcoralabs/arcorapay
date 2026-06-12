@@ -1,0 +1,1 @@
+ALTER TABLE "invoices" ADD COLUMN "gateway_address" text;

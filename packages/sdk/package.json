@@ -1,0 +1,67 @@
+{
+  "name": "@arcora/sdk",
+  "version": "1.3.0",
+  "description": "Stripe-style checkout SDK for Arcora — stablecoin payments on Arc Network",
+  "keywords": [
+    "arcora",
+    "stablecoin",
+    "checkout",
+    "payments",
+    "arc",
+    "usdc",
+    "eurc"
+  ],
+  "unpkg": "./dist/arcora.global.js",
+  "jsdelivr": "./dist/arcora.global.js",
+  "homepage": "https://github.com/arcoralabs/arcorapay/tree/HEAD/packages/sdk#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arcoralabs/arcorapay.git",
+    "directory": "packages/sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/arcoralabs/arcorapay/issues"
+  },
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./webhook": {
+      "types": "./dist/webhook.d.ts",
+      "import": "./dist/webhook.mjs",
+      "require": "./dist/webhook.js"
+    },
+    "./global": "./dist/arcora.global.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

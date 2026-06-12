@@ -1,0 +1,68 @@
+name: relayer-smoke
+
+# Manual trigger only. The smoke test broadcasts a real App Kit swap on Arc
+# testnet, so it needs a funded wallet + maker-network access — too expensive
+# for every push, and the credentials live in repo secrets (not pulled from
+# OIDC yet). Run from the Actions tab when you want to validate the relayer's
+# Vault wiring + App Kit Swap path end-to-end without SSH'ing the VPS.
+# Audit operability gap, 2026-05-12.
+#
+# Inputs are a fixed `choice` and all credentials flow through env: blocks
+# (secrets are never substituted into run: scripts directly).
+
+on:
+  workflow_dispatch:
+    inputs:
+      use_vault:
+        description: "Source key from Vault (requires VAULT_* secrets) vs PRIVATE_KEY secret"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ops/relayer
+
+    env:
+      KIT_KEY:         ${{ secrets.KIT_KEY }}
+      FEE_RECIPIENT:   ${{ secrets.FEE_RECIPIENT }}
+      ARC_TESTNET_RPC: ${{ secrets.ARC_TESTNET_RPC }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - name: Install (workspace root)
+        working-directory: .
+        run: pnpm install --frozen-lockfile
+
+      - name: Smoke (Vault-sourced key)
+        if: ${{ inputs.use_vault == 'true' }}
+        env:
+          VAULT_URL:       ${{ secrets.VAULT_URL }}
+          VAULT_ROLE_ID:   ${{ secrets.VAULT_ROLE_ID }}
+          VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
+          VAULT_KV_PATH:   ${{ secrets.VAULT_KV_PATH }}
+          VAULT_KV_FIELD:  ${{ secrets.VAULT_KV_FIELD }}
+        run: pnpm smoke
+
+      - name: Smoke (direct PRIVATE_KEY secret)
+        if: ${{ inputs.use_vault != 'true' }}
+        env:
+          PRIVATE_KEY: ${{ secrets.RELAYER_SMOKE_PRIVATE_KEY }}
+        run: pnpm smoke

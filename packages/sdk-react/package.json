@@ -1,0 +1,69 @@
+{
+  "name": "@arcora/sdk-react",
+  "version": "1.3.0",
+  "description": "React bindings for the Arcora checkout SDK — drop-in <CheckoutButton /> + useCheckout()",
+  "keywords": [
+    "arcora",
+    "react",
+    "checkout",
+    "stablecoin",
+    "payments",
+    "arc",
+    "hooks"
+  ],
+  "homepage": "https://github.com/arcoralabs/arcorapay/tree/HEAD/packages/sdk-react#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arcoralabs/arcorapay.git",
+    "directory": "packages/sdk-react"
+  },
+  "bugs": {
+    "url": "https://github.com/arcoralabs/arcorapay/issues"
+  },
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm run build"
+  },
+  "peerDependencies": {
+    "@arcora/sdk": "workspace:^",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@arcora/sdk": "workspace:*",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "happy-dom": "^20.9.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

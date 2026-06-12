@@ -1,0 +1,29 @@
+{
+  "name": "arc-fx-gateway",
+  "private": true,
+  "version": "0.0.1",
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:contracts": "pnpm --filter @arcora/contracts build",
+    "test:contracts": "pnpm --filter @arcora/contracts test",
+    "deploy:app": "cd packages/app && vercel --prod --yes",
+    "deploy:demo": "cd packages/demo-merchant && vercel --prod --yes",
+    "test:crosschain": "pnpm --filter @arcora/crosschain-core test",
+    "typecheck:crosschain": "pnpm --filter @arcora/crosschain-core typecheck"
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.3.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "axios": "^1.15.2",
+      "fast-uri": "^3.1.2",
+      "hono": "^4.12.23",
+      "ip-address": "^10.1.1",
+      "postcss": "^8.5.10"
+    }
+  }
+}

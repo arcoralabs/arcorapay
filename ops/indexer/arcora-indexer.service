@@ -1,0 +1,52 @@
+[Unit]
+Description=Arcora gateway event indexer (Arc testnet)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+# AFG-021 (2026-06-06): runs as a dedicated unprivileged user from /opt
+# (not root from /root). See arcora-relayer.service for the one-time VPS
+# migration (useradd arcora-ops; cp dirs to /opt; chown).
+User=arcora-ops
+Group=arcora-ops
+WorkingDirectory=/opt/arcora-ops/indexer
+EnvironmentFile=/opt/arcora-ops/indexer/.env
+Environment=NODE_ENV=production
+Environment=HOME=/opt/arcora-ops/indexer
+ExecStart=/usr/bin/node --import tsx/esm run.ts
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=arcora-indexer
+
+# AFG-021 sandboxing. NOTE: MemoryDenyWriteExecute is deliberately omitted —
+# V8's JIT requires writable+executable memory and node won't start with it on.
+# tsx/esbuild needs a writable HOME + working dir (ReadWritePaths).
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/opt/arcora-ops/indexer
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectControlGroups=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+
+[Install]
+WantedBy=multi-user.target

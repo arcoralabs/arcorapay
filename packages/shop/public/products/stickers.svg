@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <rect width="600" height="600" fill="#e6ecf2"/>
+  <g transform="translate(150 100)">
+    <circle cx="80" cy="80" r="74" fill="#fff" stroke="#0b1426" stroke-width="2"/>
+    <path d="M80 30 L40 130 L60 130 L80 80 L100 130 L120 130 Z" fill="#2563ff"/>
+    <path d="M52 110 Q80 80 108 110" stroke="#00c2a8" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(330 100)">
+    <rect x="0" y="0" width="160" height="160" rx="14" fill="#0b1426"/>
+    <text x="80" y="92" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="28" fill="#fff">Arcora</text>
+  </g>
+  <g transform="translate(150 320)">
+    <rect x="0" y="0" width="160" height="160" rx="14" fill="#fff" stroke="#0b1426" stroke-width="2"/>
+    <text x="80" y="76" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="14" fill="#0b1426">PAY FROM</text>
+    <text x="80" y="100" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="14" fill="#0b1426">ANYWHERE</text>
+  </g>
+  <g transform="translate(330 320)">
+    <circle cx="80" cy="80" r="74" fill="#00c2a8"/>
+    <path d="M40 110 Q80 50 120 110" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="300" y="555" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="18" fill="#5b6478">Arcora Sticker Pack · 4 die-cut vinyl</text>
+</svg>

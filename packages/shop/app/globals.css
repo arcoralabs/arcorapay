@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --color-arcora-blue:       #2563ff;
+  --color-arcora-blue-light: #3d7cff;
+  --color-arcora-teal:       #00c2a8;
+  --color-arcora-slate:      #0b1426;
+  --color-arcora-deep:       #1e2940;
+  --color-arcora-gray:       #e6ecf2;
+  --color-arcora-link:       #2563ff;
+  --color-arcora-border:     rgba(11, 20, 38, 0.12);
+  --color-arcora-muted-fg:   #5b6478;
+
+  --font-display: var(--font-display, "Inter Display"), "Inter", sans-serif;
+  --font-sans:    var(--font-sans, "Inter"), sans-serif;
+  --font-mono:    "JetBrains Mono", monospace;
+
+  --radius-pill: 56px;
+}
+
+.btn-pill {
+  border-radius: var(--radius-pill);
+  background: var(--color-arcora-slate);
+  color: white;
+  font: 600 16px/1.20 var(--font-sans);
+  letter-spacing: 0.16px;
+  padding: 14px 32px;
+  transition: background 150ms ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-pill:hover { background: var(--color-arcora-blue); }
+.btn-pill:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-pill:focus-visible { outline: 2px solid var(--color-arcora-slate); outline-offset: 2px; }
+
+.btn-pill-light {
+  border-radius: var(--radius-pill);
+  background: var(--color-arcora-gray);
+  color: var(--color-arcora-slate);
+  font: 600 16px/1.20 var(--font-sans);
+  padding: 14px 32px;
+  transition: background 150ms ease, color 150ms ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-pill-light:hover { background: var(--color-arcora-blue); color: white; }
+
+html, body {
+  background: white;
+  color: var(--color-arcora-slate);
+}
+
+input, select, textarea {
+  font: inherit;
+}

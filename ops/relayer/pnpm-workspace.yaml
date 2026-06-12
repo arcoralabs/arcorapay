@@ -1,0 +1,9 @@
+# pnpm 11 reads build-script approval from here (allowBuilds replaced the old
+# onlyBuiltDependencies/neverBuiltDependencies). These three are optional native
+# speedups (esbuild/ws helpers); tsx runs fine without them being built, so we
+# explicitly decline the build. `false` = "don't build AND don't report as
+# ignored", which clears ERR_PNPM_IGNORED_BUILDS so `pnpm smoke` runs cleanly.
+allowBuilds:
+  bufferutil: false
+  esbuild: false
+  utf-8-validate: false

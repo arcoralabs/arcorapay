@@ -1,0 +1,49 @@
+[Unit]
+Description=Arcora webhook dispatcher daemon
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+# AFG-021 (2026-06-06): dedicated unprivileged user from /opt (see
+# arcora-relayer.service for the one-time VPS migration).
+User=arcora-ops
+Group=arcora-ops
+WorkingDirectory=/opt/arcora-ops/webhooks
+EnvironmentFile=/opt/arcora-ops/webhooks/.env
+Environment=NODE_ENV=production
+Environment=HOME=/opt/arcora-ops/webhooks
+ExecStart=/usr/bin/node --import tsx/esm run.ts
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=arcora-webhooks
+
+# AFG-021 sandboxing. MemoryDenyWriteExecute deliberately omitted (V8 JIT).
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/opt/arcora-ops/webhooks
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectControlGroups=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+
+[Install]
+WantedBy=multi-user.target

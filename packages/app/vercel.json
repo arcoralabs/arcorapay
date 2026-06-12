@@ -1,0 +1,6 @@
+{
+  "framework": "nextjs",
+  "crons": [
+    { "path": "/api/internal/cron/siwe-nonce-cleanup",  "schedule": "0 0 * * *" }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "arcora-indexer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start":     "tsx run.ts",
+    "replay":    "tsx replay.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "pg": "^8.13.0",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

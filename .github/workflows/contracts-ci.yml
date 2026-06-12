@@ -1,0 +1,110 @@
+name: contracts-ci
+
+on:
+  push:
+    branches: [main, plan-1-protocol]
+    paths:
+      - "packages/contracts/**"
+      - ".github/workflows/contracts-ci.yml"
+  pull_request:
+    paths:
+      - "packages/contracts/**"
+      - ".github/workflows/contracts-ci.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: packages/contracts
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Show forge version
+        run: forge --version
+
+      - name: Build
+        run: forge build --sizes
+
+      - name: Unit + integration tests
+        run: forge test -vvv
+
+      # NOTE: V8 fuzz/invariant suites haven't been written yet — the v0.7
+      # fuzz/invariant files were moved to legacy/ on 2026-05-03 (Plan-7
+      # cleanup). Re-add CI jobs once V8-targeted fuzz/invariant tests land.
+
+      - name: Coverage
+        run: forge coverage --report summary --report lcov
+
+      - name: Coverage gate (Plan 7 Layer 2 #4)
+        run: bin/coverage-gate.sh lcov.info
+
+      - uses: codecov/codecov-action@v4
+        with:
+          files: packages/contracts/lcov.info
+          flags: contracts
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  slither:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Build so Slither finds artefacts
+        working-directory: packages/contracts
+        run: forge build
+
+      - uses: crytic/slither-action@v0.4.0
+        with:
+          target: "packages/contracts"
+          fail-on: medium
+          slither-args: "--filter-paths lib/|test/"
+
+  # Mythril is heavier (symbolic execution) — only runs on push, not on PRs,
+  # to avoid slowing down review. Audit-prep gate per Plan 7.
+  mythril:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Build (forge artefacts so Mythril can resolve imports)
+        working-directory: packages/contracts
+        run: forge build
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Mythril
+        run: pip install mythril==0.24.8
+
+      - name: Analyse canonical contracts
+        working-directory: packages/contracts
+        run: |
+          set -e
+          # Audit scope: the live gateway only. Deprecated contracts
+          # (StablePool, OracleAMM, Registry) are NOT in scope.
+          myth analyze src/ArcFXGateway.sol \
+            --solv 0.8.26 \
+            --solc-args "--allow-paths .,lib --base-path . --include-path lib/openzeppelin-contracts/contracts" \
+            --execution-timeout 600 \
+            --max-depth 12 \
+            --output-dir mythril-reports

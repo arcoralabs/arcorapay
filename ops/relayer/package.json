@@ -1,0 +1,27 @@
+{
+  "name": "arcora-relayer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "smoke":            "tsx --env-file-if-exists=.env smoke.ts",
+    "smoke:crosschain": "tsx --env-file-if-exists=.env smoke-crosschain.ts",
+    "start":     "tsx run.ts",
+    "replay":    "tsx replay.ts",
+    "typecheck": "tsc --noEmit",
+    "test":      "vitest run"
+  },
+  "dependencies": {
+    "@arcora/crosschain-core": "workspace:*",
+    "@circle-fin/app-kit": "^1.4.1",
+    "@circle-fin/adapter-viem-v2": "^1.0.0",
+    "pg": "^8.13.0",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

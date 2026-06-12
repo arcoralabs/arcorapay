@@ -1,0 +1,20 @@
+-- 0016: V10 cutover wipe — NEUTRALISED (audit App-M-6, 2026-05-31).
+--
+-- This migration ORIGINALLY contained a one-time, irreversible mass delete:
+--   TRUNCATE TABLE webhook_attempts, rate_limit_counters,
+--     checkout_authorizations, compliance_screenings, invoices, merchants
+--     RESTART IDENTITY CASCADE;
+--   DELETE FROM indexer_state;
+--
+-- A destructive cutover does NOT belong in the append-only migration folder:
+-- re-running it (drizzle-kit migrate against a populated/wrong DB) would
+-- silently destroy live invoice/escrow/indexer data. V10 is fully retired
+-- (gateway retirement 2026-05-20), so this step has no remaining legitimate
+-- use and is replaced by a guarded, dry-run-default ops script:
+--
+--   packages/app/scripts/wipe-prod-db.ts   (requires --yes, runs in a
+--   transaction, preserves __drizzle_migrations / indexer_state / server_wallets)
+--
+-- The file and its journal entry (idx 16) are kept so the migration sequence
+-- and any recorded hashes stay intact; the body is now an intentional no-op.
+SELECT 1;

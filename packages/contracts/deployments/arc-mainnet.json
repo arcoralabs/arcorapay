@@ -1,0 +1,14 @@
+{
+  "network": "arc-mainnet",
+  "chainId": null,
+  "rpc": null,
+  "explorer": null,
+  "deployer": null,
+  "tokens": {
+    "USDC": null,
+    "EURC": null
+  },
+  "current": null,
+  "_status": "not-yet-deployed",
+  "_notes": "Placeholder manifest. ArcFXGateway is mainnet-bound (Plan 11, T-0). Populate at deploy time with the same shape as arc-testnet.json. Created so the indexer config / test setup / docs all have a single canonical address source the moment mainnet ships."
+}

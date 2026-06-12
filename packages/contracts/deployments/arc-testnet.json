@@ -1,0 +1,40 @@
+{
+  "network": "arc-testnet",
+  "chainId": 5042002,
+  "rpc": "https://rpc.testnet.arc.network",
+  "explorer": "https://testnet.arcscan.app",
+  "deployer": "0xe8E5AAa3d8c705A07de02aADF98CE31F20A5754b",
+  "deployerNote": "Historical deploy origin only. This EOA was de-privileged (DEFAULT_ADMIN_ROLE revoked) on 2026-05-17 after the key leaked; admin was moved to a cold key.",
+  "tokens": {
+    "USDC": "0x3600000000000000000000000000000000000000",
+    "EURC": "0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a"
+  },
+  "current": {
+    "deployedAt": "2026-06-12",
+    "label": "v1.3.0 \u2014 single claim-time protocol fee (0.30% on the escrowed gross), escrow holds full grossPayout (settlement excess flows to the merchant, or back to the payer on refund), 7-day refund window enforced on-chain (RefundWindowExpired). Adds zero-amount invoice rejection, delegate-expiry validation and recordPayerRefund payInToken binding.",
+    "contracts": {
+      "ArcFXGateway": "0xEaE914D53B2895c832dA83419a7687eF7D1d0142"
+    },
+    "relayer": "0x29EcFedDF31E4dA4a62b89bADe35b224cE144DAE",
+    "config": {
+      "protocolFeeBps": 30,
+      "refundWindowSeconds": 604800,
+      "adminRecoveryDelaySeconds": 604800,
+      "feeRecipient": "0xe8E5AAa3d8c705A07de02aADF98CE31F20A5754b",
+      "feeRecipientNote": "Documentary only \u2014 the contract has no on-chain feeRecipient. withdrawFees(token,to) is DEFAULT_ADMIN_ROLE-gated with the destination supplied at call time. This (leaked) EOA was de-privileged 2026-05-17 and cannot withdraw.",
+      "permit2Spender": "0x000000000022D473030F116dDEE9F6B43aC78BA3"
+    },
+    "soliditySource": "src/ArcFXGateway.sol \u2014 version-neutral source. Lineage tracked by address: a new deployment with different bytecode would land at a new address recorded here.",
+    "deployTx": "0xcb4ebe3a3d5f74e321aa01016aabc82c6411980b2cbd1c7fb61fe0bf17953a8f",
+    "deployNotes": "Active gateway. The 2026-05-13 deployment (see `previous`) stays live for its existing escrows only."
+  },
+  "previous": {
+    "retiredAt": "2026-06-12",
+    "label": "v1.2.0 \u2014 custody-escrow gateway. Bytecode lineage starts at v1.0.0 (2026-05-07, then retired). Carries audit-fix bytecode from 2026-05-12, with production hardening (rate limits, Permit2 verification tests, SSRF guard, a11y) layered above in v1.2.x source.",
+    "contracts": {
+      "ArcFXGateway": "0x07BAC123A682D24d3eC439ce454cA8AC64eAe3A3"
+    },
+    "deployTx": "0x4a59990ed19331b0505bbbbc32fb46662a0f8a113c6920fc0fcea2e7b4c551e8",
+    "note": "Retired in favour of the v1.3.0 fee-model gateway. Escrows settled on this address remain claimable/refundable here; the indexer keeps watching it."
+  }
+}
